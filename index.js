@@ -1,5 +1,5 @@
  const app=require('./app');
-        app.listen(post,()=>{
+        app.listen(500,()=>{
         console.log(`Server Running on port`);
   });
 
