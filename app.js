@@ -34,7 +34,7 @@ const mongoose=require('mongoose');
          })
        .catch((err) => console.log(err));
              //Managing BackEnd API Routing  localhost:6000/api/v1
-   app.use('/api/v1',router)
+   app.use('/',router)
 
    module.exports=app;
 
