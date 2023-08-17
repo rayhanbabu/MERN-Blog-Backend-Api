@@ -1,12 +1,13 @@
-const BlogModel=require('../models/BlogModel');
+const UserModel=require('../models/UserModel');
+const jwt=require("jsonwebtoken");
 
 
 // C=Create
-exports.CreateBlog=async(req, res)=> {
+exports.CreateUser=async(req, res)=> {
     let reqBody=req.body;
-       reqBody.email=req.headers.email;
+    //console.log(reqBody);
      try{
-          let result=await BlogModel.create(reqBody);
+          let result=await UserModel.create(reqBody);
           if(result){
             res.status(200).json({status:"success",data:result})
           }else{
@@ -19,22 +20,40 @@ exports.CreateBlog=async(req, res)=> {
   }
 
 
-//R=Read
-exports.ReadBlog=async(req, res)=> {
-    let query={};
-    let Projection="title content author createdAt"
+  exports.UserLogin=async (req,res)=>{
     try{
-        let result=await BlogModel.find(query,Projection);
-          if(result){
-              res.status(200).json({status:"success",data:result})
-          }else{
-              res.status(200).json({status:"success",data:'Something Error'})
-          }   
+        let email=req.body['email'];
+        let password=req.body['password'];
+        let query={email:email,password:password};
+
+        let result= await  UserModel.find(query).count('total');
+        if(result===1){
+              //Token Issue
+             let PayLoad={
+                 exp:Math.floor(Date.now()/1000)+(24*60*60),
+                 data:email
+             }
+
+             let token=jwt.sign(PayLoad, 'SecretLy3495456535454574gryrtyrty5512143@$%#%FRDREGFDF');
+             res.status(200).json({status:"success", data:token})
+        }else{
+             res.status(200).json({status:"fail", data:result})
+        }
+    }catch(e){
+        res.status(200).json({status:"Fail", data:e})
     }
-    catch (e) {
-        res.status(200).json({status:"fail",data:e})
-    }
- }
+}
+
+exports.UserLogout=async (req,res)=>{
+  try{
+    let token= req.headers['token'];
+    jwt.destroy(token);
+    res.status(200).json({status:"success", data:'Token destroy'})
+   }catch(e){
+      res.status(200).json({status:"Fail", data:e})
+   }
+
+  }
 
 
  //R=Read
