@@ -18,7 +18,7 @@ router.post("/UserLogout",UserController.UserLogout);
 
 
 router.get('/', (req, res) => {
-    res.send('Express JS on Vercel')
+    res.send('Express JS on Vercel Authorozation')
 })
 
 
